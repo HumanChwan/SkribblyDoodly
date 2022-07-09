@@ -1,0 +1,37 @@
+@use "variables" as scheme;
+@import url("https://fonts.googleapis.com/css2?family=Cantarell:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
+*,
+*::after,
+*::before {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Cantarell";
+}
+
+html,
+body,
+#root {
+    height: 100%;
+}
+
+body {
+    background-color: #080808;
+}
+
+.btn-primary {
+    border: 1px solid darken(scheme.$primary, 10%);
+    background-color: scheme.$primary;
+    color: scheme.$secondary;
+
+    font-weight: bold;
+
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+
+    &:hover {
+        background-color: darken(powderblue, 5%);
+        cursor: pointer;
+    }
+}

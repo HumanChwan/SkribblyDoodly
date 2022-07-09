@@ -1,0 +1,55 @@
+.home {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 2rem;
+
+	height: 100%;
+
+	&__header {
+		font-weight: bold;
+		font-size: 4rem;
+	}
+
+	&__section {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 2rem;
+
+		&__user-details {
+			&__username {
+				display: flex;
+				gap: 0.75rem;
+				&__label {
+					font-size: 1.5rem;
+					color: whitesmoke;
+				}
+				&__input {
+				}
+			}
+			&__avatar {
+			}
+		}
+		&__buttons {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 1rem;
+
+			&__random {
+			}
+
+			&__private {
+				display: flex;
+				width: 150%;
+				gap: 1rem;
+
+				& button {
+					flex: 1 0 50%;
+				}
+			}
+		}
+	}
+}
