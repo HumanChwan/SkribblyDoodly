@@ -21,6 +21,7 @@ class Room {
     strength: number;
     secret_keyword: string | null;
     players: Array<Player>;
+    round_start: Date | null;
 
     static current_room: Room | null = null;
     static get ROOM_STRENGTH() {
@@ -32,6 +33,7 @@ class Room {
         this.strength = 0;
         this.players = [];
         this.secret_keyword = null;
+        this.round_start = null;
     }
 
     static joinGlobalRoom = async (player: Player): Promise<Room> => {
@@ -48,6 +50,16 @@ class Room {
             Room.current_room = null;
 
         return joinable_room;
+    };
+
+    refresh = () => {
+        // TODO: secret_keyword --- preparation
+        this.players.forEach((player) => {
+            player.round_success = false;
+            player.round_success_time = null;
+        });
+
+        this.round_start = new Date();
     };
 }
 

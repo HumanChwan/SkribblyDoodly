@@ -4,6 +4,7 @@ import { Server, Socket } from "socket.io";
 import "dotenv/config";
 import Room from "./Utils/Room";
 import Player from "./Utils/Player";
+import Game from "./Utils/Game";
 
 const PORT = process.env.PORT;
 const app = express();
@@ -23,6 +24,7 @@ const updateRoom = (room: Room) => {
             username: room_player.username,
             ID: room_player.socket_id,
             score: room_player.score,
+            round_sucess: room_player.round_success,
         }))
     );
 };
@@ -41,8 +43,7 @@ const leaveRoom = (player: Player, socket: Socket) => {
 io.on("connection", (socket: Socket) => {
     console.log(`New socket connected`);
 
-    const initial_username = `${socket.handshake.query?.username}`;
-    const player = new Player(initial_username, socket.id);
+    const player = new Player("", socket.id);
 
     socket.on("global-room-assign", async () => {
         const room = await Room.joinGlobalRoom(player);
@@ -54,9 +55,15 @@ io.on("connection", (socket: Socket) => {
     socket.on("chat-send", (message) => {
         if (player.room === null) return;
 
-        // TODO: process message for game!!!
+        const game = new Game(message, player);
+        game.processMessage();
 
-        io.to(player.room.ID).emit("chat-receive", message);
+        io.to(player.room.ID).emit("chat-receive", {
+            success: game.success,
+            sender: player.username,
+            message: game.final_message,
+        });
+        updateRoom(player.room);
     });
 
     socket.on("leave-room", () => {

@@ -6,6 +6,7 @@ export interface UserContextInterface {
     setUsername: (username: string) => void;
     joinGlobalRoom: () => void;
     leaveRoom: () => void;
+    socket: Socket | null;
 }
 
 const UserContext = createContext<UserContextInterface | null>(null);
@@ -19,9 +20,7 @@ const UserProvider = (props: any) => {
     const [socket, setSocket] = useState<Socket | null>(null);
 
     useEffect(() => {
-        const userSocket = io(`${process.env.REACT_APP_SERVER_URL}`, {
-            query: { username: "" },
-        });
+        const userSocket = io(`${process.env.REACT_APP_SERVER_URL}`);
         setSocket(userSocket);
 
         return () => {
@@ -60,6 +59,7 @@ const UserProvider = (props: any) => {
         setUsername,
         joinGlobalRoom,
         leaveRoom,
+        socket,
     };
 
     return (
