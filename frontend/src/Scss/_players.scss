@@ -1,0 +1,16 @@
+.player-box {
+    height: 70%;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-bottom: 0.5rem;
+
+    &__list {
+        border-bottom: 1px solid black;
+        height: 90%;
+    }
+
+    &__game-options {
+    }
+}

@@ -1,23 +1,23 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Rainbowify from "../Components/Rainbowify";
-import { useUser } from "../Contexts/UserContext";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Rainbowify from '../Components/Rainbowify';
+import { useUser } from '../Contexts/UserContext';
 
 const Home = () => {
-    const [usernameInput, setUsernameInput] = useState<string>("");
+    const [usernameInput, setUsernameInput] = useState<string>('');
     const navigate = useNavigate();
     const { setUsername, joinGlobalRoom } = useUser()!;
 
     const joinRandom = () => {
         setUsername(usernameInput);
         joinGlobalRoom();
-        navigate("/game");
+        navigate('/game');
     };
 
     return (
         <main className='home'>
             <header className='home__header'>
-                <Rainbowify>Skribbly Doobly</Rainbowify>
+                <Rainbowify>Skribbly Doodly</Rainbowify>
             </header>
             <section className='home__section'>
                 <div className='home__section__user-details'>
@@ -48,9 +48,7 @@ const Home = () => {
                     </div>
                     <div className='home__section__buttons__private'>
                         <button className='btn-primary'>Join Room</button>
-                        <button className='btn-primary'>
-                            Create Private Room
-                        </button>
+                        <button className='btn-primary'>Create Private Room</button>
                     </div>
                 </div>
             </section>

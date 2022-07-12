@@ -1,28 +1,41 @@
-import Room from "./Room";
+import Room from './Room';
 
 class Player {
     username: string;
     socket_id: string;
     room: Room | null;
+
     score: number;
-    round_success: boolean;
-    round_success_time: Date | null;
+
+    // -----------SKRIBL SPECIFIC FIELDS---------------
+    skribl_success: boolean;
+    skribl_success_time: Date | null;
+    is_skribl_setter: boolean;
 
     constructor(username: string, socket_id: string) {
         this.username = username;
         this.socket_id = socket_id;
+
         this.room = null;
+
         this.score = 0;
-        this.round_success = false;
-        this.round_success_time = null;
+
+        this.skribl_success = false;
+        this.skribl_success_time = null;
+        this.is_skribl_setter = false;
     }
 
     disengage = () => {
         if (this.room === null) return;
-        this.room.players = this.room.players.filter(
-            (room_player) => room_player.socket_id !== this.socket_id
-        );
+
+        this.room.removePlayer(this.socket_id);
         this.room = null;
+
+        this.score = 0;
+
+        this.skribl_success = false;
+        this.skribl_success_time = null;
+        this.is_skribl_setter = false;
     };
 }
 

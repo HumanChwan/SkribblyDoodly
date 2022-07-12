@@ -1,5 +1,5 @@
-@use "variables" as scheme;
-@import url("https://fonts.googleapis.com/css2?family=Cantarell:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+@use 'variables' as scheme;
+@import url('https://fonts.googleapis.com/css2?family=Cantarell:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 *,
 *::after,
@@ -7,7 +7,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: "Cantarell";
+    font-family: 'Cantarell';
 }
 
 html,
@@ -17,7 +17,7 @@ body,
 }
 
 body {
-    background-color: #080808;
+    background-color: whitesmoke;
 }
 
 .btn-primary {
@@ -29,9 +29,10 @@ body {
 
     border-radius: 0.5rem;
     padding: 0.5rem 1rem;
+    transition: background-color 100ms ease;
 
     &:hover {
-        background-color: darken(powderblue, 5%);
+        background-color: darken(scheme.$primary, 5%);
         cursor: pointer;
     }
 }

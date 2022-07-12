@@ -1,47 +1,48 @@
-import React, { useEffect, useState } from "react";
-import { useUser } from "../Contexts/UserContext";
-
-interface Message {
-    success: boolean;
-    sender: string;
-    message: string;
-}
+import React, { useEffect, useState } from 'react';
+import { useUser } from '../Contexts/UserContext';
+import { IMessage } from '../types';
 
 const ChatBox = () => {
-    const [messages, setMessages] = useState<Array<Message>>([]);
-    const [inputText, setInputText] = useState<string>("");
+    const [messages, setMessages] = useState<Array<IMessage>>([]);
+    const [inputText, setInputText] = useState<string>('');
     const { socket } = useUser()!;
 
     const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (socket === null) return;
-        socket.emit("chat-send", inputText);
+        socket.emit('chat-send', inputText);
 
-        setInputText("");
+        setInputText('');
     };
 
     useEffect(() => {
         if (socket === null) return;
 
-        socket.on("chat-receive", (sanitised_messaage) => {
-            const new_messages = [...messages, sanitised_messaage];
-            setMessages(new_messages);
+        socket.on('chat-receive', (sanitised_messaage) => {
+            setMessages((messages: Array<IMessage>) => {
+                const new_messages = [...messages, sanitised_messaage];
+                return new_messages;
+            });
         });
 
         return () => {
-            socket.off("chat-receive");
+            socket.off('chat-receive');
         };
     }, [socket]);
 
     return (
-        <section>
-            <div>
-                {messages.map((message) => {
-                    return `@${message.sender}: ${message.message}`;
+        <section className='chat-box'>
+            <div className='chat-box__messages'>
+                {messages.map((message, idx) => {
+                    return (
+                        <p className='chat-box__messages__message' key={idx}>
+                            <strong>@{message.sender}</strong>: {message.message}
+                        </p>
+                    );
                 })}
             </div>
-            <div>
+            <div className='chat-box__input'>
                 <form onSubmit={handleSubmit}>
                     <input
                         type='text'

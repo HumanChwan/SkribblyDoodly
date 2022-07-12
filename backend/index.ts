@@ -1,10 +1,10 @@
-import express from "express";
-import { createServer } from "http";
-import { Server, Socket } from "socket.io";
-import "dotenv/config";
-import Room from "./Utils/Room";
-import Player from "./Utils/Player";
-import Game from "./Utils/Game";
+import express from 'express';
+import { createServer } from 'http';
+import { Server, Socket } from 'socket.io';
+import 'dotenv/config';
+import Room from './Utils/Room';
+import Player from './Utils/Player';
+import Game from './Utils/Game';
 
 const PORT = process.env.PORT;
 const app = express();
@@ -19,7 +19,7 @@ app.use(express.json());
 
 const updateRoom = (room: Room) => {
     io.to(room.ID).emit(
-        "room-update",
+        'room-update',
         room.players.map((room_player) => ({
             username: room_player.username,
             ID: room_player.socket_id,
@@ -40,41 +40,43 @@ const leaveRoom = (player: Player, socket: Socket) => {
     updateRoom(room);
 };
 
-io.on("connection", (socket: Socket) => {
+io.on('connection', (socket: Socket) => {
     console.log(`New socket connected`);
 
-    const player = new Player("", socket.id);
+    const player = new Player('', socket.id);
 
-    socket.on("global-room-assign", async () => {
+    socket.on('global-room-assign', async () => {
         const room = await Room.joinGlobalRoom(player);
         player.room = room;
 
         socket.join(room.ID);
+        updateRoom(room);
     });
 
-    socket.on("chat-send", (message) => {
+    socket.on('chat-send', (message) => {
         if (player.room === null) return;
 
-        const game = new Game(message, player);
+        // TODO: make the sender join success channel (another room, which is exclusive for success players)
         game.processMessage();
 
-        io.to(player.room.ID).emit("chat-receive", {
+        io.to(player.room.ID).emit('chat-receive', {
             success: game.success,
             sender: player.username,
             message: game.final_message,
         });
-        updateRoom(player.room);
+        if (game.success) updateRoom(player.room);
     });
 
-    socket.on("leave-room", () => {
+    socket.on('leave-room', () => {
         leaveRoom(player, socket);
     });
 
-    socket.on("username-change", (username: string) => {
+    socket.on('username-change', (username: string) => {
         player.username = username;
+        if (player.room) updateRoom(player.room);
     });
 
-    socket.on("disconnect", () => {
+    socket.on('disconnect', () => {
         leaveRoom(player, socket);
     });
 });

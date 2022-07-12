@@ -1,10 +1,13 @@
-import React from "react";
-import ChatBox from "../Components/ChatBox";
+import React from 'react';
+import Canvas from '../Components/Canvas';
+import ChatBox from '../Components/ChatBox';
+import Players from '../Components/Players';
 
 const Game = () => {
     return (
-        <main>
-            <h1 style={{ color: "whitesmoke" }}>Game!</h1>
+        <main className='game'>
+            <Players />
+            <Canvas />
             <ChatBox />
         </main>
     );

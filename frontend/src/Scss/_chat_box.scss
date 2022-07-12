@@ -1,0 +1,17 @@
+.chat-box {
+    border: solid 1px black;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    padding-bottom: 0.5rem;
+    height: 70%;
+
+    &__messages {
+        border-bottom: solid 1px black;
+        overflow: auto;
+        height: 90%;
+    }
+
+    &__input {
+    }
+}
