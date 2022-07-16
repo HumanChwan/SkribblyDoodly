@@ -4,7 +4,6 @@ import { Server, Socket } from 'socket.io';
 import 'dotenv/config';
 import Room from './Utils/Room';
 import Player from './Utils/Player';
-import Game from './Utils/Game';
 
 const PORT = process.env.PORT;
 const app = express();
@@ -24,7 +23,7 @@ const updateRoom = (room: Room) => {
             username: room_player.username,
             ID: room_player.socket_id,
             score: room_player.score,
-            round_sucess: room_player.round_success,
+            round_success: room_player.skribl_success,
         }))
     );
 };
@@ -53,18 +52,38 @@ io.on('connection', (socket: Socket) => {
         updateRoom(room);
     });
 
-    socket.on('chat-send', (message) => {
+    socket.on('chat-send', (message: string) => {
         if (player.room === null) return;
 
-        // TODO: make the sender join success channel (another room, which is exclusive for success players)
-        game.processMessage();
-
-        io.to(player.room.ID).emit('chat-receive', {
-            success: game.success,
+        const messageObj = {
             sender: player.username,
-            message: game.final_message,
-        });
-        if (game.success) updateRoom(player.room);
+            message: message,
+            admin: false,
+        };
+
+        const result = player.room.present_game?.round?.processMessage(message);
+        if (result) {
+            socket.join(`${player.room.ID}-success`);
+            player.setWin();
+
+            messageObj.admin = true;
+            messageObj.message = 'CORRECT';
+
+            updateRoom(player.room);
+        }
+
+        io.to(player.room.ID).emit('chat-receive', messageObj);
+    });
+
+    socket.on('game-start', () => {
+        if (player.room?.room_host?.socket_id === player.socket_id) {
+            const canStart = player.room!.startGameTrigger();
+        } else {
+            io.emit(
+                'system-message',
+                'YOU DO NOT HAVE THE ROOM HOST PRIVILEGES'
+            );
+        }
     });
 
     socket.on('leave-room', () => {

@@ -1,32 +1,37 @@
-import Player from './Player';
+import assert from 'assert';
 import Room from './Room';
-
-/*
--Game (analogous to Round)
-    -skribl
-*/
+import Round from './Round';
 
 class Game {
+    round: Round;
+    rounds_left: number;
     room: Room;
-    rounds: number;
-    secret_keyword: string;
 
-    constructor(rounds: number, room: Room) {
+    in_play: boolean;
+
+    constructor(room: Room, numberOfRounds: number) {
+        this.round = new Round(room.players);
+        this.rounds_left = numberOfRounds - 1;
         this.room = room;
-        this.rounds = rounds;
 
-        // TODO: secret_keyword --- preparation
-        this.secret_keyword = '';
+        this.in_play = true;
     }
 
-    processMessage = (message: string, player: Player) => {
-        const result = this.secret_keyword.toLowerCase() === message.toLowerCase();
+    refresh = () => {
+        this.room.players.forEach((player) => {
+            player.refresh();
+        });
+    };
 
-        if (result) {
-            player.skribl_success = true;
-            player.skribl_success_time = new Date();
-        }
-        return result;
+    roundRefresh = () => {
+        this.refresh();
+        assert(this.rounds_left > 0, 'Game Ended, yet round refresh called');
+
+        this.round = new Round(this.room.players);
+    };
+
+    removePlayer = (socket_id: string) => {
+        this.round?.removePlayer(socket_id);
     };
 }
 

@@ -25,6 +25,11 @@ class Player {
         this.is_skribl_setter = false;
     }
 
+    setWin = () => {
+        this.skribl_success = true;
+        this.skribl_success_time = new Date();
+    };
+
     disengage = () => {
         if (this.room === null) return;
 
@@ -35,6 +40,13 @@ class Player {
 
         this.skribl_success = false;
         this.skribl_success_time = null;
+        this.is_skribl_setter = false;
+    };
+
+    refresh = () => {
+        this.skribl_success = false;
+        this.skribl_success_time = null;
+
         this.is_skribl_setter = false;
     };
 }
